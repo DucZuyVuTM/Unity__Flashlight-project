@@ -41,12 +41,6 @@ public class SpiralCubes : MonoBehaviour
             {
                 rend.material.color = new Color(Random.value, Random.value, Random.value);
             }
-
-            Rigidbody rb = cube.AddComponent<Rigidbody>();
-            rb.isKinematic = true;
-            cube.isStatic = true;
-
-            cube.layer = LayerMask.NameToLayer("Cubes");
         }
     }
 }

@@ -11,7 +11,7 @@ public class NPC_Chaser : MonoBehaviour
 
     void Start()
     {
-        agent = GetComponent<NavMeshAgent>();
+        agent = GetComponent<Rigidbody>().gameObject.GetComponent<NavMeshAgent>();
         agent.updateRotation = false;
 
         if (player == null)
@@ -28,32 +28,33 @@ public class NPC_Chaser : MonoBehaviour
             if (Time.time >= nextUpdateTime)
             {
                 nextUpdateTime = Time.time + updateRate;
-                Vector3 flatTarget = new Vector3(player.position.x, transform.position.y, player.position.z);
-
+                
+                // NavMeshAgent tự hiểu độ cao, chỉ cần truyền player.position
                 if (agent.isOnNavMesh) 
                 {
-                    agent.SetDestination(flatTarget);
+                    agent.SetDestination(player.position);
                 }
             }
 
-            Vector3 direction = (player.position - transform.position).normalized;
-            direction.y = 0; 
-            
-            if (direction != Vector3.zero)
+            // --- LOGIC XOAY ---
+            if (agent.velocity.sqrMagnitude > 0.1f)
             {
+                Vector3 direction = agent.velocity.normalized;
+                direction.y = 0;
+                
                 Quaternion lookRotation = Quaternion.LookRotation(direction);
-                transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 10f);
+                transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 8f);
             }
         }
     }
 
     void OnDrawGizmos()
     {
+        // Vẽ đường nối từ NPC tới đích đến thực tế của Agent
         if (agent != null && agent.enabled)
         {
             Gizmos.color = Color.red;
             Gizmos.DrawLine(transform.position, agent.destination);
-
             Gizmos.DrawSphere(agent.destination, 0.2f);
         }
     }
