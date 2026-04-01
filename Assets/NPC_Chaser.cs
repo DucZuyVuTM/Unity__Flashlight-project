@@ -4,6 +4,8 @@ using UnityEngine.AI;
 public class NPC_Chaser : MonoBehaviour
 {
     public Transform player;
+    public Transform leftTarget;
+    public Transform rightTarget;
     public float updateRate = 0.02f;
 
     private NavMeshAgent agent;
@@ -23,34 +25,39 @@ public class NPC_Chaser : MonoBehaviour
 
     void Update()
     {
-        if (player != null)
+        if (player != null && leftTarget != null && rightTarget != null)
         {
             if (Time.time >= nextUpdateTime)
             {
                 nextUpdateTime = Time.time + updateRate;
-                
-                // NavMeshAgent tự hiểu độ cao, chỉ cần truyền player.position
+
+                float distToLeft = Vector3.Distance(transform.position, leftTarget.position);
+                float distToRight = Vector3.Distance(transform.position, rightTarget.position);
+
+                Transform closestTarget = (distToLeft < distToRight) ? leftTarget : rightTarget;
+
                 if (agent.isOnNavMesh) 
                 {
-                    agent.SetDestination(player.position);
+                    agent.SetDestination(closestTarget.position);
                 }
             }
 
-            // --- LOGIC XOAY ---
-            if (agent.velocity.sqrMagnitude > 0.1f)
-            {
-                Vector3 direction = agent.velocity.normalized;
-                direction.y = 0;
-                
-                Quaternion lookRotation = Quaternion.LookRotation(direction);
-                transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 8f);
-            }
+            LookAtTarget(player.position);
+        }
+    }
+
+    void LookAtTarget(Vector3 targetPos)
+    {
+        Vector3 direction = (targetPos - transform.position).normalized;
+        direction.y = 0;
+        if (direction != Vector3.zero)
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), Time.deltaTime * 10f);
         }
     }
 
     void OnDrawGizmos()
     {
-        // Vẽ đường nối từ NPC tới đích đến thực tế của Agent
         if (agent != null && agent.enabled)
         {
             Gizmos.color = Color.red;
