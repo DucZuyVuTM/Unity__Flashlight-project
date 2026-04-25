@@ -245,5 +245,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8561829ed6a86c9ecbd451447a2ad5e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LightBullet
-  speed: 20
+  speed: 40
   dissolveEffectPrefab: {fileID: 4054673058376982932, guid: c0bc12e5f4f0cb96e91d6d20049ef4c1, type: 3}
+  bounceDetectRadius: 0.5
+  killDetectRadius: 0.3
