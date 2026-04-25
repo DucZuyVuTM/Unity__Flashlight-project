@@ -31,6 +31,9 @@ public class LightBullet : MonoBehaviour
 
             if (rootObj.CompareTag("NPC"))
             {
+                if (PlayerScore.Instance != null)
+                    PlayerScore.Instance.AddScore(1);
+
                 // Direct hit -> kill
                 if (dissolveEffectPrefab != null)
                     Instantiate(dissolveEffectPrefab, killHit.transform.position, Quaternion.identity);
