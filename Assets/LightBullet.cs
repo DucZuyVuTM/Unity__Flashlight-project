@@ -36,7 +36,16 @@ public class LightBullet : MonoBehaviour
 
                 // Direct hit -> kill
                 if (dissolveEffectPrefab != null)
-                    Instantiate(dissolveEffectPrefab, killHit.transform.position, Quaternion.identity);
+                {
+                    Vector3 direction = (rootObj.transform.position - transform.position).normalized;
+
+                    Quaternion effectRotation = Quaternion.LookRotation(direction);
+
+                    GameObject effect = Instantiate(dissolveEffectPrefab, killHit.transform.position, effectRotation);
+
+                    Destroy(effect, 3f);
+                }
+
                 Destroy(rootObj);
                 Destroy(gameObject);
                 return;
