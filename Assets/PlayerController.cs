@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;  // It is required for using Keyboard.current.
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -20,6 +21,7 @@ public class PlayerController : MonoBehaviour
         HandleMovement();  // Create every movement
         HandleRotation();  // Create every rotation
         HandleJump();      // Create every jump
+        CheckFallOff();
     }
 
     void HandleMovement()
@@ -62,6 +64,14 @@ public class PlayerController : MonoBehaviour
         {
             // Apply an instantaneous upward force
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        }
+    }
+
+    void CheckFallOff()
+    {
+        if (transform.position.y <= -9f)
+        {
+            SceneManager.LoadScene("GameOver");
         }
     }
 }
