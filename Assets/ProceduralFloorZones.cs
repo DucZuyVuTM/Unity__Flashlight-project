@@ -47,7 +47,7 @@ public class ProceduralFloorZones : MonoBehaviour
         mr.material = dangerMaterial;
 
         renderers[index] = mr;
-        // zone.tag = "FloorZone";  // Use tag so that the NPC can check
+        zone.tag = "FloorZone";  // Use tag so that the NPC can check
     }
 
     void Update()

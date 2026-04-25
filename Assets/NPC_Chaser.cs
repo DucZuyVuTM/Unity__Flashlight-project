@@ -13,13 +13,21 @@ public class NPC_Chaser : MonoBehaviour
 
     void Start()
     {
-        agent = GetComponent<Rigidbody>().gameObject.GetComponent<NavMeshAgent>();
+        agent = GetComponent<NavMeshAgent>();
+        
+        if (agent == null)
+        {
+            Debug.LogError("NavMeshAgent not found on " + gameObject.name);
+            return;
+        }
+
         agent.updateRotation = false;
 
         if (player == null)
         {
             GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
             if (playerObj != null) player = playerObj.transform;
+            else Debug.LogError("Player not found. Make sure Player has tag 'Player'");
         }
     }
 

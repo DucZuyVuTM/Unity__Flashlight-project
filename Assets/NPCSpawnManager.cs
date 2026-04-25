@@ -11,6 +11,8 @@ public class NPCSpawnManager : MonoBehaviour
     public float spawnRadiusTo = 30f;
     public float spawnInterval = 2f;
     public int maxNPCs = 10;
+    public Transform leftTarget;
+    public Transform rightTarget;
 
     void Start()
     {
@@ -32,38 +34,39 @@ public class NPCSpawnManager : MonoBehaviour
 
     void TrySpawnNPC()
     {
-        // 1. Take a random direction (Unit circle)
         Vector2 randomDirection = Random.insideUnitCircle.normalized;
-
-        // 2. Take a random distance within the range you have set
         float randomDistance = Random.Range(spawnRadiusFrom, spawnRadiusTo);
 
-        // 3. Calculate the final spawn location
         Vector3 spawnPos = new Vector3(
-            randomDirection.x * randomDistance, 
-            0.5f, 
+            randomDirection.x * randomDistance,
+            0.5f,
             randomDirection.y * randomDistance
         );
 
-        // 2. Shoot a Raycast beam down to check the floor area.
         RaycastHit hit;
         if (Physics.Raycast(spawnPos + Vector3.up * 2f, Vector3.down, out hit, 5f))
         {
-            // Check if it hits the floor and is NOT the safe zone.
-            if (hit.collider.CompareTag("FloorZone"))
+            Debug.Log("Raycast hit: " + hit.collider.name + " | Tag: " + hit.collider.tag);
+
+            if (hit.collider.CompareTag("FloorZone") && !IsZoneSafe(hit.collider.gameObject))
             {
-                // Check if this area is safe
-                // We will check the name or index of the area
-                if (!IsZoneSafe(hit.collider.gameObject))
+                GameObject npcObj = Instantiate(NPC, spawnPos, Quaternion.identity);
+
+                NPC_Chaser chaser = npcObj.GetComponent<NPC_Chaser>();
+                if (chaser != null)
                 {
-                    Instantiate(NPC, spawnPos, Quaternion.identity);
-                }
-                else
-                {
-                    // If you land in the green zone, skip this attempt (or try a different location).
-                    Debug.Log("Safe zone - no spawning NPC!");
+                    chaser.leftTarget = leftTarget;
+                    chaser.rightTarget = rightTarget;
                 }
             }
+            else
+            {
+                Debug.Log("Không trúng FloorZone! Trúng: " + hit.collider.tag);
+            }
+        }
+        else
+        {
+            Debug.Log("Raycast không trúng gì cả!");
         }
     }
 
