@@ -26,6 +26,6 @@ public class PlayerStats : MonoBehaviour
     void Die()
     {
         Debug.Log("The player was dead!");
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene("GameOver");
     }
 }

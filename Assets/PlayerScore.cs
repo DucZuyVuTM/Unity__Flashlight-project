@@ -30,6 +30,6 @@ public class PlayerScore : MonoBehaviour
     void UpdateScoreUI()
     {
         if (scoreText != null)
-            scoreText.text = "Score: " + score;
+            scoreText.text = score.ToString();
     }
 }
