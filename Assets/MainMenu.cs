@@ -3,16 +3,16 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Start button
     public void StartGame()
     {
         SceneManager.LoadScene("Game");
     }
 
-    // Update is called once per frame
+    // Exit button
     public void ExitGame()
     {
-        Debug.Log("Выход из игры");
+        Debug.Log("Exit game");
         
         #if UNITY_EDITOR
             // Exit in edit mode

@@ -6,7 +6,7 @@ public class PlayerStats : MonoBehaviour
 {
     public float maxHealth = 100f;
     public float currentHealth;
-    public Image healthBarFill; 
+    public Image healthBarFill;
 
     void Start()
     {
@@ -15,7 +15,7 @@ public class PlayerStats : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
-        currentHealth -= damage;        
+        currentHealth -= damage;
         healthBarFill.fillAmount = currentHealth / maxHealth;
         if (currentHealth <= 0)
         {
@@ -25,7 +25,7 @@ public class PlayerStats : MonoBehaviour
 
     void Die()
     {
-        Debug.Log("Игрок погиб!");        
+        Debug.Log("The player was dead!");
         SceneManager.LoadScene(0);
     }
 }

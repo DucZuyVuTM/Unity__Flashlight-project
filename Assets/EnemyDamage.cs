@@ -13,7 +13,7 @@ public class EnemyDamage : MonoBehaviour
             if (Time.time >= nextDamageTime)
             {
                 PlayerStats stats = other.GetComponentInParent<PlayerStats>();
-                
+
                 if (stats != null)
                 {
                     stats.TakeDamage(damageAmount);

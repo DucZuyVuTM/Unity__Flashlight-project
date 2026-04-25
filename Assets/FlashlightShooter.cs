@@ -27,7 +27,7 @@ public class FlashlightShooter : MonoBehaviour
 
         GameObject bullet = Instantiate(bulletPrefab, frontPoint.position, Quaternion.LookRotation(shootDirection));
 
-        // Tự động thêm Rigidbody nếu chưa có
+        // Automatically add Rigidbody if doesn't exist
         Rigidbody rb = bullet.GetComponent<Rigidbody>();
         if (rb == null)
         {

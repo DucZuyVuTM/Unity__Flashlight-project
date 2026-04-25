@@ -15,7 +15,7 @@ public class Spawner : MonoBehaviour
     {
         // Create random position (from 0 to 3) in X, Y, Z axis
         Vector3 randomPos = new Vector3(Random.value, Random.value, Random.value);
-        
+
         // Spawn object in that random position
         GameObject flashlight = Instantiate(
             flashlightPrefab, randomPos, Quaternion.identity, transform);

@@ -24,8 +24,8 @@ public class FlashlightPointFollowCam : MonoBehaviour
 
         // 2. Find the target location for the camera
         // This spot is located behind the back point based on the lighting direction and is slightly higher.
-        Vector3 targetPosition = BackPoint.position 
-                                 - (flashlightDirection * distanceBack) 
+        Vector3 targetPosition = BackPoint.position
+                                 - (flashlightDirection * distanceBack)
                                  + (Vector3.up * heightOffset);
 
         // Smooth camera movement
@@ -34,10 +34,10 @@ public class FlashlightPointFollowCam : MonoBehaviour
         // 3. Calculate the angle of view
         // The camera will always be facing the front point
         Quaternion targetRotation = Quaternion.LookRotation(flashlightDirection, Vector3.up);
-        
+
         // Multiply the quaternion by rotating it around the X-axis to point downwards.
         targetRotation *= Quaternion.Euler(pitchOffset, 0, 0);
-        
+
         // Smooth camera rotation
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, lookSpeed * Time.deltaTime);
     }

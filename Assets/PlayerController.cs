@@ -51,7 +51,7 @@ public class PlayerController : MonoBehaviour
         // Calculate real-time rotation angle
         float rotationAmount = rotateInput * rotationSpeed * Time.deltaTime;
 
-        // Rotate around the world's Y-axis to ensure accurate horizontal rotation.
+        // Rotate around the world's Y-axis to ensure accurate horizontal rotation
         transform.Rotate(Vector3.up, rotationAmount, Space.World);
     }
 

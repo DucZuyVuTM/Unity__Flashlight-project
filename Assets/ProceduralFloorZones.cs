@@ -34,16 +34,16 @@ public class ProceduralFloorZones : MonoBehaviour
 
         MeshFilter mf = zone.AddComponent<MeshFilter>();
         MeshRenderer mr = zone.AddComponent<MeshRenderer>();
-        MeshCollider mc = zone.AddComponent<MeshCollider>(); 
+        MeshCollider mc = zone.AddComponent<MeshCollider>();
 
         Mesh mesh = new Mesh();
         mesh.vertices = vertices;
         // Connect the tops clockwise so that the right side is facing upwards
-        mesh.triangles = new int[] { 0, 1, 2 }; 
+        mesh.triangles = new int[] { 0, 1, 2 };
         mesh.RecalculateNormals();
 
         mf.mesh = mesh;
-        mc.sharedMesh = mesh; 
+        mc.sharedMesh = mesh;
         mr.material = dangerMaterial;
 
         renderers[index] = mr;
@@ -79,7 +79,7 @@ public class ProceduralFloorZones : MonoBehaviour
             renderers[i].material = (i == safeIndex) ? safeMaterial : dangerMaterial;
         }
     }
-    
+
     // Support function for SpawnManager: Returns the current safe zone index
     public int GetActiveZoneIndex() => activeZoneIndex;
 }

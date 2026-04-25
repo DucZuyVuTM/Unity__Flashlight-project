@@ -32,7 +32,6 @@ public class LightBullet : MonoBehaviour
             if (rootObj.CompareTag("NPC"))
             {
                 // Direct hit -> kill
-                Debug.Log("Trực diện - tiêu diệt!");
                 if (dissolveEffectPrefab != null)
                     Instantiate(dissolveEffectPrefab, killHit.transform.position, Quaternion.identity);
                 Destroy(rootObj);

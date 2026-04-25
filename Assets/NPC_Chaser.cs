@@ -14,7 +14,7 @@ public class NPC_Chaser : MonoBehaviour
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        
+
         if (agent == null)
         {
             Debug.LogError("NavMeshAgent not found on " + gameObject.name);
@@ -44,7 +44,7 @@ public class NPC_Chaser : MonoBehaviour
 
                 Transform closestTarget = (distToLeft < distToRight) ? leftTarget : rightTarget;
 
-                if (agent.isOnNavMesh) 
+                if (agent.isOnNavMesh)
                 {
                     agent.SetDestination(closestTarget.position);
                 }

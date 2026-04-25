@@ -5,7 +5,7 @@ public class NPCSpawnManager : MonoBehaviour
 {
     public GameObject NPC;
     public ProceduralFloorZones floorManager;
-    
+
     [Header("Spawn Settings")]
     public float spawnRadiusFrom = 25f;
     public float spawnRadiusTo = 30f;
@@ -61,12 +61,12 @@ public class NPCSpawnManager : MonoBehaviour
             }
             else
             {
-                Debug.Log("Không trúng FloorZone! Trúng: " + hit.collider.tag);
+                Debug.Log("Does not hit FloorZone! Hit: " + hit.collider.tag);
             }
         }
         else
         {
-            Debug.Log("Raycast không trúng gì cả!");
+            Debug.Log("Raycast does not hit anything!");
         }
     }
 
