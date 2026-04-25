@@ -17,6 +17,8 @@ public class PlayerScore : MonoBehaviour
 
     void Start()
     {
+        score = 0;
+        PlayerPrefs.SetInt("FinalScore", 0);
         UpdateScoreUI();
     }
 
