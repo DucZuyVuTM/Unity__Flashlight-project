@@ -4,8 +4,8 @@ public class LightBullet : MonoBehaviour
 {
     public float speed = 40f;
     public GameObject dissolveEffectPrefab;
-    public float bounceDetectRadius = 0.5f;
-    public float killDetectRadius = 0.3f;
+    public float killAngle = 27f;
+    public float sphereRadius = 0.6f;
 
     private Vector3 moveDirection;
 
@@ -17,66 +17,64 @@ public class LightBullet : MonoBehaviour
     void Update()
     {
         float moveDistance = speed * Time.deltaTime;
+        int steps = 3;
+        float stepDistance = moveDistance / steps;
 
-        // Small SphereCast checks the direct hit first.
-        if (Physics.SphereCast(transform.position, killDetectRadius, moveDirection, out RaycastHit killHit, moveDistance + 0.3f))
+        Debug.DrawRay(transform.position, moveDirection * 2f, Color.red);
+
+        for (int i = 0; i < steps; i++)
         {
-            GameObject rootObj = killHit.transform.root.gameObject;
-
-            if (rootObj.name == "Flashlight")
+            if (Physics.SphereCast(transform.position, sphereRadius, moveDirection, out RaycastHit hit, stepDistance + 0.1f))
             {
-                transform.Translate(moveDirection * moveDistance, Space.World);
-                return;
-            }
+                GameObject rootObj = hit.transform.root.gameObject;
 
-            if (rootObj.CompareTag("NPC"))
-            {
-                if (PlayerScore.Instance != null)
-                    PlayerScore.Instance.AddScore(1);
-
-                // Direct hit -> kill
-                if (dissolveEffectPrefab != null)
+                // Pass through flashlight
+                if (rootObj.name == "Flashlight")
                 {
-                    Vector3 direction = (rootObj.transform.position - transform.position).normalized;
-
-                    Quaternion effectRotation = Quaternion.LookRotation(direction);
-
-                    GameObject effect = Instantiate(dissolveEffectPrefab, killHit.transform.position, effectRotation);
-
-                    Destroy(effect, 3f);
+                    transform.Translate(moveDirection * stepDistance, Space.World);
+                    continue;
                 }
 
-                Destroy(rootObj);
-                Destroy(gameObject);
+                if (rootObj.CompareTag("NPC"))
+                {
+                    float angle = Vector3.Angle(moveDirection, -hit.normal);
+                    Debug.Log("Angle: " + angle);
+
+                    if (angle < killAngle)
+                    {
+                        // Direct hit -> kill
+                        if (PlayerScore.Instance != null)
+                            PlayerScore.Instance.AddScore(1);
+
+                        if (dissolveEffectPrefab != null)
+                        {
+                            Vector3 direction = (rootObj.transform.position - transform.position).normalized;
+                            GameObject effect = Instantiate(dissolveEffectPrefab, hit.transform.position, Quaternion.LookRotation(direction));
+                            Destroy(effect, 3f);
+                        }
+
+                        Destroy(rootObj);
+                        Destroy(gameObject);
+                        return;
+                    }
+                    else
+                    {
+                        // Not direct hit -> bounce off
+                        moveDirection = Vector3.Reflect(moveDirection, hit.normal).normalized;
+                        transform.Translate(moveDirection * stepDistance, Space.World);
+                        return;
+                    }
+                }
+
+                // Obstacle -> bounce off
+                moveDirection = Vector3.Reflect(moveDirection, hit.normal).normalized;
+                transform.Translate(moveDirection * stepDistance, Space.World);
                 return;
             }
 
-            // Obstacle - bounce off
-            moveDirection = Vector3.Reflect(moveDirection, killHit.normal).normalized;
-            transform.Translate(moveDirection * moveDistance, Space.World);
-            return;
+            transform.Translate(moveDirection * stepDistance, Space.World);
         }
 
-        // Big SphereCast checks the edge of the NPC for bouncing off
-        if (Physics.SphereCast(transform.position, bounceDetectRadius, moveDirection, out RaycastHit bounceHit, moveDistance + 0.3f))
-        {
-            GameObject rootObj = bounceHit.transform.root.gameObject;
-
-            if (rootObj.name == "Flashlight")
-            {
-                transform.Translate(moveDirection * moveDistance, Space.World);
-                return;
-            }
-
-            if (rootObj.CompareTag("NPC"))
-            {
-                moveDirection = Vector3.Reflect(moveDirection, bounceHit.normal).normalized;
-                transform.Translate(moveDirection * moveDistance, Space.World);
-                return;
-            }
-        }
-
-        transform.Translate(moveDirection * moveDistance, Space.World);
         Destroy(gameObject, 3f);
     }
 }

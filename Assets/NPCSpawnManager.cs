@@ -61,7 +61,7 @@ public class NPCSpawnManager : MonoBehaviour
             }
             else
             {
-                Debug.Log("Does not hit FloorZone! Hit: " + hit.collider.tag);
+                Debug.Log("Does not hit DangerZone.");
             }
         }
         else

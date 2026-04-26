@@ -72,5 +72,29 @@ public class NPC_Chaser : MonoBehaviour
             Gizmos.DrawLine(transform.position, agent.destination);
             Gizmos.DrawSphere(agent.destination, 0.2f);
         }
+
+        // NPC Center
+        Gizmos.color = Color.green;
+        Gizmos.DrawSphere(transform.position, 0.1f);
+
+        // Capsule Collider area
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, 0.5f);
+
+        // Nose position
+        Transform nose = transform.Find("Nose");
+        if (nose != null)
+        {
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawSphere(nose.position, 0.1f);
+            Gizmos.DrawLine(transform.position, nose.position);
+        }
+
+        #if UNITY_EDITOR
+            UnityEditor.Handles.Label(transform.position + Vector3.up * 2.5f,
+                "Center: " + transform.position.ToString("F2"));
+            if (transform.Find("Nose") != null)
+                UnityEditor.Handles.Label(transform.Find("Nose").position + Vector3.up * 0.3f, "Nose");
+        #endif
     }
 }
