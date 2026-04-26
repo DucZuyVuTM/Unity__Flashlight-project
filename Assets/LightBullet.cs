@@ -9,12 +9,15 @@ public class LightBullet : MonoBehaviour
 
     private Vector3 moveDirection;
     private GameObject ignoreRoot; // Ignored object (flashlight)
+    private bool isDead = false;
+
+    public Vector3 GetMoveDirection() => moveDirection;
 
     public void SetIgnoreRoot(GameObject root)
     {
         ignoreRoot = root;
 
-        // Ignore physical collisions between the bullet and all flashlight colliders.
+        // Ignore physical collisions between the bullet and all flashlight colliders
         Collider[] bulletColliders = GetComponentsInChildren<Collider>();
         Collider[] flashlightColliders = root.GetComponentsInChildren<Collider>();
 
@@ -30,58 +33,70 @@ public class LightBullet : MonoBehaviour
 
     void Update()
     {
+        if (isDead) return;
+
         float moveDistance = speed * Time.deltaTime;
-        int steps = 30;
+        int steps = 50;
         float stepDistance = moveDistance / steps;
 
         Debug.DrawRay(transform.position, moveDirection * 2f, Color.red);
 
         for (int i = 0; i < steps; i++)
         {
-            if (Physics.SphereCast(transform.position, sphereRadius, moveDirection, out RaycastHit hit, stepDistance + 0.1f))
+            // Use OverlapSphere instead of SphereCast to avoid missing any hits.
+            Collider[] hits = Physics.OverlapSphere(transform.position + moveDirection * stepDistance, sphereRadius);
+            
+            bool handled = false;
+            foreach (Collider col in hits)
             {
-                GameObject rootObj = hit.transform.root.gameObject;
-
-                // Pass through flashlight and other bullets
-                if (rootObj == ignoreRoot || rootObj == gameObject)
-                {
-                    transform.Translate(moveDirection * stepDistance, Space.World);
-                    continue;
-                }
+                GameObject rootObj = col.transform.root.gameObject;
+                if (rootObj == ignoreRoot || rootObj == gameObject) continue;
 
                 if (rootObj.CompareTag("NPC"))
                 {
-                    float angle = Vector3.Angle(moveDirection, -hit.normal);
-                    Debug.Log("Hit angle: " + angle);
-
-                    if (angle < killAngle)
+                    // SphereCast is used to get normal
+                    if (Physics.SphereCast(transform.position, sphereRadius, moveDirection, out RaycastHit hit, stepDistance * 2f))
                     {
-                        // Direct hit -> kill
-                        if (PlayerScore.Instance != null)
-                            PlayerScore.Instance.AddScore(1);
-
-                        if (dissolveEffectPrefab != null)
+                        if (hit.transform.root.gameObject == rootObj)
                         {
-                            Vector3 direction = (rootObj.transform.position - transform.position).normalized;
-                            GameObject effect = Instantiate(dissolveEffectPrefab, hit.transform.position, Quaternion.LookRotation(direction));
-                            Destroy(effect, 3f);
-                        }
+                            float angle = Vector3.Angle(moveDirection, -hit.normal);
+                            Debug.Log("NPC Hit Angle: " + angle);
 
-                        Destroy(rootObj);
-                        Destroy(gameObject);
-                        return;
-                    }
-                    else
-                    {
-                        // Not direct hit -> bounce off
-                        moveDirection = Vector3.Reflect(moveDirection, hit.normal).normalized;
-                        transform.Translate(moveDirection * stepDistance, Space.World);
-                        return;
+                            if (angle < killAngle)
+                            {
+                                isDead = true;
+                                if (PlayerScore.Instance != null) PlayerScore.Instance.AddScore(1);
+                                if (dissolveEffectPrefab != null)
+                                {
+                                    Vector3 dir = (rootObj.transform.position - transform.position).normalized;
+                                    Destroy(Instantiate(dissolveEffectPrefab, transform.position, Quaternion.LookRotation(dir)), 3f);
+                                }
+                                Destroy(rootObj);
+                                Destroy(gameObject);
+                                return;
+                            }
+                            else
+                            {
+                                moveDirection = Vector3.Reflect(moveDirection, hit.normal).normalized;
+                                handled = true;
+                                break;
+                            }
+                        }
                     }
                 }
+                else
+                {
+                    if (Physics.SphereCast(transform.position, sphereRadius, moveDirection, out RaycastHit hit, stepDistance * 2f))
+                    {
+                        moveDirection = Vector3.Reflect(moveDirection, hit.normal).normalized;
+                        handled = true;
+                        break;
+                    }
+                }
+            }
 
-                // Obstacle -> bounce off
-                moveDirection = Vector3.Reflect(moveDirection, hit.normal).normalized;
+            if (handled)
+            {
                 transform.Translate(moveDirection * stepDistance, Space.World);
                 return;
             }

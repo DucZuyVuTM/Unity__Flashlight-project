@@ -6,6 +6,7 @@ TagManager:
   tags:
   - NPC
   - FloorZone
+  - Bullet
   layers:
   - Default
   - TransparentFX
