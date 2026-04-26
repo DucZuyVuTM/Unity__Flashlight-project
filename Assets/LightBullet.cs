@@ -38,7 +38,7 @@ public class LightBullet : MonoBehaviour
                 if (rootObj.CompareTag("NPC"))
                 {
                     float angle = Vector3.Angle(moveDirection, -hit.normal);
-                    Debug.Log("Angle: " + angle);
+                    Debug.Log("Hit angle: " + angle);
 
                     if (angle < killAngle)
                     {
