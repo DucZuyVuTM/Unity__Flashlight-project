@@ -5,9 +5,23 @@ public class LightBullet : MonoBehaviour
     public float speed = 40f;
     public GameObject dissolveEffectPrefab;
     public float killAngle = 27f;
-    public float sphereRadius = 0.6f;
+    public float sphereRadius = 0.5f;
 
     private Vector3 moveDirection;
+    private GameObject ignoreRoot; // Ignored object (flashlight)
+
+    public void SetIgnoreRoot(GameObject root)
+    {
+        ignoreRoot = root;
+
+        // Ignore physical collisions between the bullet and all flashlight colliders.
+        Collider[] bulletColliders = GetComponentsInChildren<Collider>();
+        Collider[] flashlightColliders = root.GetComponentsInChildren<Collider>();
+
+        foreach (Collider bc in bulletColliders)
+            foreach (Collider fc in flashlightColliders)
+                Physics.IgnoreCollision(bc, fc, true);
+    }
 
     void Start()
     {
@@ -17,7 +31,7 @@ public class LightBullet : MonoBehaviour
     void Update()
     {
         float moveDistance = speed * Time.deltaTime;
-        int steps = 3;
+        int steps = 30;
         float stepDistance = moveDistance / steps;
 
         Debug.DrawRay(transform.position, moveDirection * 2f, Color.red);
@@ -28,8 +42,8 @@ public class LightBullet : MonoBehaviour
             {
                 GameObject rootObj = hit.transform.root.gameObject;
 
-                // Pass through flashlight
-                if (rootObj.name == "Flashlight")
+                // Pass through flashlight and other bullets
+                if (rootObj == ignoreRoot || rootObj == gameObject)
                 {
                     transform.Translate(moveDirection * stepDistance, Space.World);
                     continue;
