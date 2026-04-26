@@ -64,6 +64,24 @@ public class NPC_Chaser : MonoBehaviour
         }
     }
 
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Bullet"))
+        {
+            LightBullet bullet = other.GetComponent<LightBullet>();
+            if (bullet != null)
+            {
+                Vector3 bulletDirection = bullet.GetMoveDirection();
+                Vector3 normal = (other.transform.position - transform.position).normalized;
+                normal.y = 0;
+                normal.Normalize();
+
+                float angle = Vector3.Angle(bulletDirection, -normal);
+                Debug.LogError("Error: bullet flied through NPC | Angle: " + angle);
+            }
+        }
+    }
+
     void OnDrawGizmos()
     {
         if (agent != null && agent.enabled)
