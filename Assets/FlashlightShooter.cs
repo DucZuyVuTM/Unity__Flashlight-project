@@ -31,8 +31,9 @@ public class FlashlightShooter : MonoBehaviour
         if (rb == null)
             rb = bullet.AddComponent<Rigidbody>();
 
-        rb.isKinematic = true;
+        rb.isKinematic = false;
         rb.useGravity = false;
+        rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
 
         // Ignore the collision between the bullet and the flashlight
         LightBullet lightBullet = bullet.GetComponent<LightBullet>();
