@@ -3,13 +3,13 @@ using UnityEngine.InputSystem;
 
 public class FlashlightShooter : MonoBehaviour
 {
-    [Header("Flashlight parameters")]
+    [Header("Flashlight Settings")]
     public GameObject bulletPrefab;
     public Transform backPoint;
     public Transform frontPoint;
     public Transform firePoint;
 
-    [Header("Bullet parameters")]
+    [Header("Bullet Settings")]
     public AudioClip laserSound;
     public float bulletSpeed = 50f;
 
@@ -40,6 +40,10 @@ public class FlashlightShooter : MonoBehaviour
         LightBullet lightBullet = bullet.GetComponent<LightBullet>();
         if (lightBullet != null)
             lightBullet.SetIgnoreRoot(transform.root.gameObject);
+
+        FlashlightRecoil recoil = GetComponentInChildren<FlashlightRecoil>();
+        if (recoil != null)
+            recoil.TriggerRecoil();
 
         PlaySound(laserSound, bullet.transform.position);
 

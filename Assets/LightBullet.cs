@@ -7,7 +7,7 @@ public class LightBullet : MonoBehaviour
     public AudioClip explosionSound;
     public AudioClip ricochetSound;
 
-    [Header("Bullet parameters")]
+    [Header("Bullet Settings")]
     public float speed = 40f;
     public float killAngle = 27f;
     public float sphereRadius = 0.5f;

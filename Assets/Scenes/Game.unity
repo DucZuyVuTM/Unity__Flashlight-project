@@ -233,6 +233,21 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: 0, y: 0, z: -0.004}
   m_TimeToStationary: 0.5
+--- !u!114 &41591254
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 41591242}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84583003f614b33629b67736dd46cc29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FlashlightRecoil
+  recoilDistance: 1
+  recoilSpeed: 15
+  returnSpeed: 8
 --- !u!1 &307626457
 GameObject:
   m_ObjectHideFlags: 0
@@ -886,6 +901,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7930138505277792161, guid: abbec2e6b65ec8af88a16e30c5b26e5a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 41591251}
+    - targetCorrespondingSourceObject: {fileID: 7930138505277792161, guid: abbec2e6b65ec8af88a16e30c5b26e5a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 41591254}
   m_SourcePrefab: {fileID: 100100000, guid: abbec2e6b65ec8af88a16e30c5b26e5a, type: 3}
 --- !u!1 &633385370
 GameObject:
