@@ -3,13 +3,14 @@ using UnityEngine.InputSystem;
 
 public class FlashlightShooter : MonoBehaviour
 {
-    [Header("Object settings")]
+    [Header("Flashlight parameters")]
     public GameObject bulletPrefab;
     public Transform backPoint;
     public Transform frontPoint;
     public Transform firePoint;
 
-    [Header("Bullet parameter")]
+    [Header("Bullet parameters")]
+    public AudioClip laserSound;
     public float bulletSpeed = 50f;
 
     void Update()
@@ -40,6 +41,14 @@ public class FlashlightShooter : MonoBehaviour
         if (lightBullet != null)
             lightBullet.SetIgnoreRoot(transform.root.gameObject);
 
+        PlaySound(laserSound, bullet.transform.position);
+
         Destroy(bullet, 3f);
+    }
+
+    void PlaySound(AudioClip sound, Vector3 position)
+    {
+        if (sound != null)
+            AudioSource.PlayClipAtPoint(sound, position);
     }
 }

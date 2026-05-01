@@ -2113,6 +2113,7 @@ MonoBehaviour:
   backPoint: {fileID: 307626458}
   frontPoint: {fileID: 732426675}
   firePoint: {fileID: 702678499}
+  laserSound: {fileID: 8300000, guid: aae6d278beb2dc79492ffb472e80a27d, type: 3}
   bulletSpeed: 40
 --- !u!1 &65702494529910435
 GameObject:
