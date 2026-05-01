@@ -2,8 +2,12 @@ using UnityEngine;
 
 public class LightBullet : MonoBehaviour
 {
-    public float speed = 40f;
+    [Header("Effects")]
     public GameObject dissolveEffectPrefab;
+    public AudioClip explosionSound;
+
+    [Header("Bullet parameters")]
+    public float speed = 40f;
     public float killAngle = 27f;
     public float sphereRadius = 0.5f;
 
@@ -71,6 +75,8 @@ public class LightBullet : MonoBehaviour
                                     Vector3 dir = (rootObj.transform.position - transform.position).normalized;
                                     Destroy(Instantiate(dissolveEffectPrefab, transform.position, Quaternion.LookRotation(dir)), 3f);
                                 }
+                                if (explosionSound != null)
+                                    AudioSource.PlayClipAtPoint(explosionSound, transform.position);
                                 Destroy(rootObj);
                                 Destroy(gameObject);
                                 return;
