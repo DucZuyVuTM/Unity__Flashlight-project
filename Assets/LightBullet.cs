@@ -5,6 +5,7 @@ public class LightBullet : MonoBehaviour
     [Header("Effects")]
     public GameObject dissolveEffectPrefab;
     public AudioClip explosionSound;
+    public AudioClip ricochetSound;
 
     [Header("Bullet parameters")]
     public float speed = 40f;
@@ -75,8 +76,7 @@ public class LightBullet : MonoBehaviour
                                     Vector3 dir = (rootObj.transform.position - transform.position).normalized;
                                     Destroy(Instantiate(dissolveEffectPrefab, transform.position, Quaternion.LookRotation(dir)), 3f);
                                 }
-                                if (explosionSound != null)
-                                    AudioSource.PlayClipAtPoint(explosionSound, transform.position);
+                                PlaySound(explosionSound, transform.position);
                                 Destroy(rootObj);
                                 Destroy(gameObject);
                                 return;
@@ -84,6 +84,7 @@ public class LightBullet : MonoBehaviour
                             else
                             {
                                 moveDirection = Vector3.Reflect(moveDirection, hit.normal).normalized;
+                                PlaySound(ricochetSound, transform.position);
                                 handled = true;
                                 break;
                             }
@@ -95,6 +96,7 @@ public class LightBullet : MonoBehaviour
                     if (Physics.SphereCast(transform.position, sphereRadius, moveDirection, out RaycastHit hit, stepDistance * 2f))
                     {
                         moveDirection = Vector3.Reflect(moveDirection, hit.normal).normalized;
+                        PlaySound(ricochetSound, transform.position);
                         handled = true;
                         break;
                     }
@@ -111,5 +113,11 @@ public class LightBullet : MonoBehaviour
         }
 
         Destroy(gameObject, 3f);
+    }
+
+    void PlaySound(AudioClip sound, Vector3 position)
+    {
+        if (sound != null)
+            AudioSource.PlayClipAtPoint(sound, position);
     }
 }
