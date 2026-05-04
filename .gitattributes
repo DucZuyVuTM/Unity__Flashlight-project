@@ -1,0 +1,4 @@
+# Files about WebGl are binaries
+*.unityweb binary
+*.br binary
+*.gz binary
