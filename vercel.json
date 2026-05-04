@@ -1,7 +1,7 @@
 {
   "headers": [
     {
-      "source": "/(.*)\\.br",
+      "source": "/(.*)\\.unityweb",
       "headers": [
         {
           "key": "Content-Encoding",
@@ -14,20 +14,11 @@
       ]
     },
     {
-      "source": "/(.*)\\.unityweb",
+      "source": "/(.*)\\.data",
       "headers": [
         {
           "key": "Content-Encoding",
           "value": "br"
-        }
-      ]
-    },
-    {
-      "source": "/(.*)\\.wasm",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "application/wasm"
         }
       ]
     }

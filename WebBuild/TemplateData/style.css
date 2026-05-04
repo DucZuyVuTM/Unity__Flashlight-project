@@ -2,6 +2,7 @@ body {
   padding: 0; 
   margin: 0; 
   background: #1a1a1a;
+  color: white;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -17,9 +18,18 @@ main {
 }
 
 #game-title {
-  color: white;
   font-size: clamp(1.5rem, 8vw, 3.6rem);
   text-align: center;
+}
+
+#message {
+  margin-bottom: 3rem;
+  text-align: center;
+  font-style: italic;
+}
+
+#message h3 {
+  margin: 0;
 }
 
 #unity-container { 
@@ -141,7 +151,6 @@ main {
   margin: 3rem 2rem 0 2rem;
   padding: 1.5rem 0;
   border-top: 1px solid #d1d5db;
-  color: white;
 }
 
 .footer-container {
