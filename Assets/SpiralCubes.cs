@@ -7,6 +7,9 @@ public class SpiralCubes : MonoBehaviour
     public float radiusIncrement = 1.5f;
     public float angleIncrement = 20f;
 
+    [Header("Material for cube spawning")]
+    public Material spiralMaterial;
+
     void Start()
     {
         SpawnSpiral();
@@ -14,6 +17,12 @@ public class SpiralCubes : MonoBehaviour
 
     void SpawnSpiral()
     {
+        if (spiralMaterial == null)
+        {
+            Debug.LogError("Material for SpiralCubes not found!");
+            return;
+        }
+
         for (int i = 0; i < numOfObj; i++)
         {
             float angle = i * angleIncrement;
@@ -32,7 +41,10 @@ public class SpiralCubes : MonoBehaviour
 
             Renderer rend = cube.GetComponent<Renderer>();
             if (rend != null)
+            {
+                rend.material = new Material(spiralMaterial);
                 rend.material.color = new Color(Random.value, Random.value, Random.value);
+            }
 
             NavMeshObstacle obstacle = cube.AddComponent<NavMeshObstacle>();
             obstacle.carving = true;  // Create hole in NavMesh

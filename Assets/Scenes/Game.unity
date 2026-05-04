@@ -1666,6 +1666,7 @@ MonoBehaviour:
   numOfObj: 20
   radiusIncrement: 1.5
   angleIncrement: 20
+  spiralMaterial: {fileID: 2100000, guid: 0c13758a60d570a269c2cefab17b9518, type: 2}
 --- !u!4 &1479919154
 Transform:
   m_ObjectHideFlags: 0
