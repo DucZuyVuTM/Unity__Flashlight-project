@@ -18,8 +18,8 @@ public class MainMenu : MonoBehaviour
             // Exit in edit mode
             UnityEditor.EditorApplication.isPlaying = false;
         #elif UNITY_WEBGL
-            // Exit in WebGL - close browser tab
-            Application.OpenURL("javascript:window.close()");
+            // Exit in WebGL - tell the player to close browser tab
+            Application.OpenURL("javascript:alert('Thank you for playing! You can close the game tab manually.');");
         #else
             // Exit in built file
             Application.Quit();
