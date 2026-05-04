@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="TemplateData/style.css">
   </head>
   <body>
+    <h1 id="game-title">Flashlight Game</h1>
     <div id="unity-container" class="unity-desktop">
       <canvas id="unity-canvas" tabindex="-1"></canvas>
       <div id="unity-loading-bar">
@@ -23,112 +24,202 @@
         <div id="unity-build-title">Flashlight Game</div>
       </div>
     </div>
+
+    <div id="start-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; display: flex; justify-content: center; align-items: center; cursor: pointer; flex-direction: column;">
+      <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px 60px; border-radius: 20px; font-size: 32px; font-family: Arial, sans-serif; font-weight: bold; color: white; box-shadow: 0 10px 40px rgba(0,0,0,0.3); text-align: center;">
+        🎮 CLICK TO START
+        <div style="font-size: 16px; margin-top: 10px; opacity: 0.8;">Tap anywhere to begin</div>
+      </div>
+    </div>
+
     <script>
-      var canvas = document.querySelector("#unity-canvas");
-
-      // Shows a temporary message banner/ribbon for a few seconds, or
-      // a permanent error message on top of the canvas if type=='error'.
-      // If type=='warning', a yellow highlight color is used.
-      // Modify or remove this function to customize the visually presented
-      // way that non-critical warnings and error messages are presented to the
-      // user.
-      function unityShowBanner(msg, type) {
-        var warningBanner = document.querySelector("#unity-warning");
-        function updateBannerVisibility() {
-          warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
-        }
-        var div = document.createElement('div');
-        div.innerHTML = msg;
-        warningBanner.appendChild(div);
-        if (type == 'error') div.style = 'background: red; padding: 10px;';
-        else {
-          if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
-          setTimeout(function() {
-            warningBanner.removeChild(div);
-            updateBannerVisibility();
-          }, 5000);
-        }
-        updateBannerVisibility();
-      }
-
-      var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/WebBuild.loader.js";
-      var config = {
-        arguments: [],
-        dataUrl: buildUrl + "/WebBuild.data.unityweb",
-        frameworkUrl: buildUrl + "/WebBuild.framework.js.unityweb",
-        codeUrl: buildUrl + "/WebBuild.wasm.unityweb",
-        streamingAssetsUrl: "StreamingAssets",
-        companyName: "RTU MIREA",
-        productName: "Flashlight Game",
-        productVersion: "0.1.0",
-        showBanner: unityShowBanner,
-        matchWebGLToCanvasSize: true,
-        // errorHandler: function(err, url, line) {
-        //    alert("error " + err + " occurred at line " + line);
-        //    // Return 'true' if you handled this error and don't want Unity
-        //    // to process it further, 'false' otherwise.
-        //    return true;
-        // },
-      };
-
-      // By default, Unity keeps WebGL canvas render target size matched with
-      // the DOM size of the canvas element (scaled by window.devicePixelRatio)
-      // Set this to false if you want to decouple this synchronization from
-      // happening inside the engine, and you would instead like to size up
-      // the canvas DOM size and WebGL render target sizes yourself.
-      // config.matchWebGLToCanvasSize = false;
-
-      // If you would like all file writes inside Unity Application.persistentDataPath
-      // directory to automatically persist so that the contents are remembered when
-      // the user revisits the site the next time, uncomment the following line:
-      // config.autoSyncPersistentDataPath = true;
-      // This autosyncing is currently not the default behavior to avoid regressing
-      // existing user projects that might rely on the earlier manual
-      // JS_FileSystem_Sync() behavior, but in future Unity version, this will be
-      // expected to change.
-
-      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        // Mobile device style: fill the whole browser client area with the game canvas:
-
-        var meta = document.createElement('meta');
-        meta.name = 'viewport';
-        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
-        document.getElementsByTagName('head')[0].appendChild(meta);
-        document.querySelector("#unity-container").className = "unity-mobile";
-        canvas.className = "unity-mobile";
-
-        // To lower canvas resolution on mobile devices to gain some
-        // performance, uncomment the following line:
-        // config.devicePixelRatio = 1;
-
-
-      } else {
-        // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
-        canvas.style.width = "100%";
-        canvas.style.height = "100%";
-      }
-
-      document.querySelector("#unity-loading-bar").style.display = "block";
-
-      var script = document.createElement("script");
-      script.src = loaderUrl;
-      script.onload = () => {
-        createUnityInstance(canvas, config, (progress) => {
-          document.querySelector("#unity-progress-bar-full").style.width = 100 * progress + "%";
-              }).then((unityInstance) => {
-                document.querySelector("#unity-loading-bar").style.display = "none";
-                document.querySelector("#unity-fullscreen-button").onclick = () => {
-                  unityInstance.SetFullscreen(1);
-                };
-
+      (function() {
+          // ========== CONFIG ==========
+          var buildUrl = "Build";
+          var loaderUrl = buildUrl + "/WebBuild.loader.js";
+          
+          var canvas = document.querySelector("#unity-canvas");
+          var loadingBar = document.querySelector("#unity-loading-bar");
+          var progressBarFull = document.querySelector("#unity-progress-bar-full");
+          var overlay = document.getElementById("start-overlay");
+          
+          // ========== FAKE FULL AUDIO CONTEXT ==========
+          // Save original constructor
+          const OriginalAudioContext = window.AudioContext || window.webkitAudioContext;
+          
+          // Create fake AudioContext with full properties
+          function createFakeAudioContext() {
+            // Create listener object with full properties
+            const listener = {
+              positionX: { value: 0 },
+              positionY: { value: 0 },
+              positionZ: { value: 0 },
+              forwardX: { value: 0 },
+              forwardY: { value: 0 },
+              forwardZ: { value: -1 },
+              upX: { value: 0 },
+              upY: { value: 1 },
+              upZ: { value: 0 },
+              setPosition: function(x, y, z) {},
+              setOrientation: function(fx, fy, fz, ux, uy, uz) {}
+            };
+            
+            return {
+              state: 'suspended',
+              currentTime: 0,
+              sampleRate: 44100,
+              destination: {},
+              listener: listener,
+              _isFake: true,
+              
+              // Methods
+              resume: () => Promise.resolve(),
+              suspend: () => Promise.resolve(),
+              close: () => Promise.resolve(),
+              
+              // AudioNode factories
+              createGain: () => ({
+                connect: () => {},
+                disconnect: () => {},
+                gain: { value: 1 }
+              }),
+              
+              createBufferSource: () => ({
+                connect: () => {},
+                disconnect: () => {},
+                start: () => {},
+                stop: () => {},
+                buffer: null,
+                loop: false,
+                loopStart: 0,
+                loopEnd: 0,
+                playbackRate: { value: 1 }
+              }),
+              
+              createMediaElementSource: () => ({ connect: () => {} }),
+              createScriptProcessor: () => ({ connect: () => {} }),
+              createAnalyser: () => ({
+                connect: () => {},
+                fftSize: 2048,
+                frequencyBinCount: 1024,
+                getByteFrequencyData: () => {},
+                getByteTimeDomainData: () => {}
+              }),
+              
+              createOscillator: () => ({
+                connect: () => {},
+                disconnect: () => {},
+                start: () => {},
+                stop: () => {},
+                frequency: { value: 440 },
+                type: 'sine'
+              }),
+              
+              createBiquadFilter: () => ({ connect: () => {}, frequency: { value: 350 } }),
+              createDynamicsCompressor: () => ({ connect: () => {} }),
+              createPanner: () => ({
+                connect: () => {},
+                panningModel: 'equalpower',
+                distanceModel: 'inverse',
+                refDistance: 1,
+                maxDistance: 10000,
+                rolloffFactor: 1,
+                coneInnerAngle: 360,
+                coneOuterAngle: 0,
+                coneOuterGain: 0
+              }),
+              
+              createStereoPanner: () => ({ connect: () => {}, pan: { value: 0 } }),
+              createConstantSource: () => ({ connect: () => {}, start: () => {}, offset: { value: 0 } }),
+              createChannelMerger: () => ({ connect: () => {} }),
+              createChannelSplitter: () => ({ connect: () => {} }),
+              createConvolver: () => ({ connect: () => {}, buffer: null }),
+              createDelay: () => ({ connect: () => {}, delayTime: { value: 0 } }),
+              createIIRFilter: () => ({ connect: () => {} }),
+              createPeriodicWave: () => ({}),
+              createWaveShaper: () => ({ connect: () => {}, curve: null }),
+              decodeAudioData: () => Promise.resolve(null)
+            };
+          }
+          
+          // Fake constructor
+          function FakeAudioContext() {
+            return createFakeAudioContext();
+          }
+          
+          // Overwrite global constructor
+          window.AudioContext = FakeAudioContext;
+          window.webkitAudioContext = FakeAudioContext;
+          
+          // ========== INITIALIZE UNITY AFTER USER CLICK ==========
+          let isGameStarted = false;
+          let unityInstance = null;
+          
+          function startGame() {
+            if (isGameStarted) return;
+            isGameStarted = true;
+            
+            // Delete overlay
+            if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
+            
+            // Restore real AudioContext
+            window.AudioContext = OriginalAudioContext;
+            window.webkitAudioContext = OriginalAudioContext;
+            
+            // Display loading bar
+            if (loadingBar) loadingBar.style.display = "block";
+            
+            // Load and run Unity
+            var script = document.createElement("script");
+            script.src = loaderUrl;
+            script.onload = () => {
+              createUnityInstance(canvas, {
+                dataUrl: buildUrl + "/WebBuild.data.unityweb",
+                frameworkUrl: buildUrl + "/WebBuild.framework.js.unityweb",
+                codeUrl: buildUrl + "/WebBuild.wasm.unityweb",
+                streamingAssetsUrl: "StreamingAssets",
+                companyName: "RTU MIREA",
+                productName: "Flashlight Game",
+                productVersion: "0.1.0",
+                matchWebGLToCanvasSize: true,
+              }, (progress) => {
+                if (progressBarFull) progressBarFull.style.width = 100 * progress + "%";
+              }).then((instance) => {
+                unityInstance = instance;
+                if (loadingBar) loadingBar.style.display = "none";
+                
+                // Activate fullscreen button
+                var fullscreenBtn = document.querySelector("#unity-fullscreen-button");
+                if (fullscreenBtn) {
+                  fullscreenBtn.onclick = () => instance.SetFullscreen(1);
+                }
+                
+                // Resume real AudioContext if needed
+                setTimeout(() => {
+                  if (instance.Module && instance.Module.ctx) {
+                    const ctx = instance.Module.ctx;
+                    if (ctx.state === 'suspended') {
+                      ctx.resume();
+                    }
+                  }
+                }, 100);
+                
               }).catch((message) => {
-                alert(message);
+                console.error("Unity error:", message);
+                alert("Failed to load game: " + message);
               });
             };
-
-      document.body.appendChild(script);
-
+            document.body.appendChild(script);
+          }
+          
+          // Listen to user interaction
+          overlay.addEventListener('click', startGame);
+          overlay.addEventListener('touchstart', startGame);
+          document.addEventListener('keydown', startGame, { once: true });
+          
+          // Hide initial loading bar
+          if (loadingBar) loadingBar.style.display = "none";
+      })();
     </script>
   </body>
 </html>

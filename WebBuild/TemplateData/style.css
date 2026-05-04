@@ -9,6 +9,12 @@ body {
   min-height: 100vh;
 }
 
+#game-title {
+  color: white;
+  font-size: clamp(1.5rem, 8vw, 3.6rem);
+  text-align: center;
+}
+
 #unity-container { 
   width: 80vw;
   height: 45vw; /* Keep aspect 16:9 */
