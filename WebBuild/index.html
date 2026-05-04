@@ -8,22 +8,69 @@
     <link rel="stylesheet" href="TemplateData/style.css">
   </head>
   <body>
-    <h1 id="game-title">Flashlight Game</h1>
-    <div id="unity-container" class="unity-desktop">
-      <canvas id="unity-canvas" tabindex="-1"></canvas>
-      <div id="unity-loading-bar">
-        <div id="unity-logo"></div>
-        <div id="unity-progress-bar-empty">
-          <div id="unity-progress-bar-full"></div>
+    <main>
+      <h1 id="game-title">Flashlight Game</h1>
+      <div id="unity-container" class="unity-desktop">
+        <canvas id="unity-canvas" tabindex="-1"></canvas>
+        <div id="unity-loading-bar">
+          <div id="unity-logo"></div>
+          <div id="unity-progress-bar-empty">
+            <div id="unity-progress-bar-full"></div>
+          </div>
+        </div>
+        <div id="unity-warning"> </div>
+        <div id="unity-footer">
+          <div id="unity-logo-title-footer"></div>
+          <div id="unity-fullscreen-button"></div>
+          <div id="unity-build-title">Flashlight Game</div>
         </div>
       </div>
-      <div id="unity-warning"> </div>
-      <div id="unity-footer">
-        <div id="unity-logo-title-footer"></div>
-        <div id="unity-fullscreen-button"></div>
-        <div id="unity-build-title">Flashlight Game</div>
+
+      <div class="box--game-page">
+        <div class="block-title uppercase">
+          Game controls
+        </div>
+
+        <div class="keys-for-game">
+          <ul>
+            <li>
+              <div class="key-definition">
+                <div class="keyboard-key">WASD</div>
+                <div class="action-text-container">
+                  Move flashlight
+                </div>
+              </div>
+              <div class="key-definition">
+                <div class="keyboard-key">← →</div>
+                <div class="action-text-container">
+                  Look around
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="key-definition">
+                <div class="keyboard-key">ESC</div>
+                <div class="action-text-container">
+                  Exit gameplay
+                </div>
+              </div>
+              <div class="key-definition">
+                <div class="keyboard-key">Q</div>
+                <div class="action-text-container">
+                  Pause
+                </div>
+              </div>
+              <div class="key-definition">
+                <div class="keyboard-key">E</div>
+                <div class="action-text-container">
+                  Shoot
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
       </div>
-    </div>
+    </main>
 
     <div id="start-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; display: flex; justify-content: center; align-items: center; cursor: pointer; flex-direction: column;">
       <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px 60px; border-radius: 20px; font-size: 32px; font-family: Arial, sans-serif; font-weight: bold; color: white; box-shadow: 0 10px 40px rgba(0,0,0,0.3); text-align: center;">
