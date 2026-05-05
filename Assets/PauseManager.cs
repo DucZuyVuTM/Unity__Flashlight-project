@@ -30,9 +30,9 @@ public class PauseManager : MonoBehaviour
 
     void Update()
     {
-        if (Keyboard.current != null && Keyboard.current.qKey.wasPressedThisFrame)
+        if (Keyboard.current != null && Keyboard.current.downArrowKey.wasPressedThisFrame)
             TogglePause();
-        if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
+        if (Keyboard.current != null && Keyboard.current.pKey.wasPressedThisFrame)
             Stop();
     }
 

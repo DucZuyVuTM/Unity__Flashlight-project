@@ -15,7 +15,7 @@ public class FlashlightShooter : MonoBehaviour
 
     void Update()
     {
-        if (Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame)
+        if (Keyboard.current != null && Keyboard.current.upArrowKey.wasPressedThisFrame)
             Shoot();
     }
 
