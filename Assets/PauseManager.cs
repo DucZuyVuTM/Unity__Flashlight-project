@@ -52,6 +52,8 @@ public class PauseManager : MonoBehaviour
     {
         Time.timeScale = 1f;
         PlayerPrefs.SetInt("FinalScore", 0);
+        PlayerPrefs.SetInt("FinalScoreRival", 0);
+        PlayerPrefs.SetInt("FinalWasMultiplayer", 0);
         SceneManager.LoadScene("MainMenu");
     }
 
