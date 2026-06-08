@@ -6,7 +6,7 @@
 
 **A first-person shooter where you defend your flashlight from relentless robots — mind the ricochet, and don’t fall off the floating platform!**
 
-[![Game Screenshot](https://via.placeholder.com/800x400.png?text=Flashlight+Game+-+Shoot+Robots+in+First+Person)](https://flashlight-game.vercel.app)
+![Game Screenshot](game-screenshot.png)
 
 ## 🎮 About the Game
 
