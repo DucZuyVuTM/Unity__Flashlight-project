@@ -4,7 +4,7 @@
 [![Unity Version](https://img.shields.io/badge/Unity-2022.3.x-orange?logo=unity)](https://unity.com/)
 [![Netcode](https://img.shields.io/badge/Netcode-for%20GameObjects-2b5797)](https://docs-multiplayer.unity3d.com/netcode/current/about)
 
-**A first-person shooter where you defend your flashlight from relentless robots — mind the ricochet, and don’t fall off the floating platform!**
+**A first-person shooter where you defend your flashlight from relentless robots – mind the ricochet, and don’t fall off the floating platform!**
 
 ![Game Screenshot](game-screenshot.png)
 
@@ -37,6 +37,7 @@ In *Flashlight Game*, you are trapped on a levitating platform in the sky, holdi
 
 ## 🧱 Project Structure
 
+```
 Unity__Flashlight-project/
 ├── Assets/          # Game scripts, scenes, prefabs, and assets
 ├── ProjectSettings/ # Unity project configuration
@@ -45,6 +46,7 @@ Unity__Flashlight-project/
 ├── LinuxBuild/      # Linux standalone build
 ├── vercel.json      # Vercel deployment configuration (Unity WebGL headers)
 └── .gitattributes   # Git LFS & line‑ending settings
+```
 
 ## 🚀 Getting Started (Development)
 
